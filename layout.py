@@ -24,12 +24,17 @@ layout = html.Div([
                     ),
                     dbc.Col([
                         html.Div(id='dep_nome'),
-                        html.Div(id='dep_partido'),
-                        html.Div(id='dep_uf')
+                        html.Div(id='dep_uf'),
+                        html.Div([
+                            html.Img(id='partido_logo'),
+                            html.Span(id='dep_partido')
+                        ])
                     ],
                         style = {'margin': 20}
                     )
-                ])
+                ],
+                    no_gutters = True
+                )
             ],
                 className = 'col_layout shadow',
                 width = 5
