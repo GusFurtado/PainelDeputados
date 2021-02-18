@@ -4,7 +4,7 @@ import dash
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 
-import layout
+import layout, utils
 
 
 
@@ -43,6 +43,7 @@ def update_dropdown_options(x):
     [Output('dep_foto', 'src'),
     Output('dep_nome', 'children'),
     Output('dep_uf', 'children'),
+    Output('uf_bandeira', 'src'),
     Output('dep_partido', 'children'),
     Output('partido_logo', 'src')],
     [Input('dep_dropdown', 'value')],
@@ -54,7 +55,8 @@ def update_deputado(cod):
     return (
         dep.foto,
         dep.nome_eleitoral,
-        dep.uf,
+        utils.UFS[dep.uf],
+        utils.bandeira(dep.uf),
         PARTIDOS.loc[partido, 'nome'],
         PARTIDOS.loc[partido, 'logo']
     )
