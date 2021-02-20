@@ -1,5 +1,7 @@
 from DadosAbertosBrasil import camara
 
+from datetime import datetime
+
 import dash
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
@@ -8,9 +10,15 @@ import layout, utils
 
 
 
+MONTSERRAT = {
+    'href': 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
+    'rel': 'stylesheet'
+}
+
+
 app = dash.Dash(
     name = __name__,
-    external_stylesheets = [dbc.themes.BOOTSTRAP]
+    external_stylesheets = [dbc.themes.BOOTSTRAP, MONTSERRAT]
 )
 
 app.layout = layout.layout
@@ -42,6 +50,9 @@ def update_dropdown_options(x):
 @app.callback(
     [Output('dep_foto', 'src'),
     Output('dep_nome', 'children'),
+    Output('dep_email', 'children'),
+    Output('dep_telefone', 'children'),
+    Output('dep_nascimento', 'children'),
     Output('dep_uf', 'children'),
     Output('uf_bandeira', 'src'),
     Output('dep_partido', 'children'),
@@ -51,10 +62,18 @@ def update_dropdown_options(x):
 def update_deputado(cod):
     dep = camara.Deputado(cod)
     partido = PARTIDOS.index[PARTIDOS.sigla==dep.partido][0]
-    
+
+    nascimento = datetime.strftime(
+        datetime.strptime(dep.nascimento, '%Y-%m-%d'),
+        format = '%d/%m/%Y'
+    )
+
     return (
         dep.foto,
         dep.nome_eleitoral,
+        dep.email,
+        dep.gabinete['telefone'],
+        nascimento,
         utils.UFS[dep.uf],
         utils.bandeira(dep.uf),
         PARTIDOS.loc[partido, 'nome'],

@@ -1,25 +1,41 @@
 body {
     background-color: cyan;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
 }
 
 
 .col_layout {
     height: 500px;
     background-color: white;
+    margin-top: 20px;
     padding: 15px;
+}
+
+
+.dep_atributo {
+    padding: 5px;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+
+.dep_atributo_title {
+    color: grey;
+    font-weight: 600;
+    font-size: 12px;
 }
 
 
 #dep_foto {
     width: 150px;
     border-radius: 10px;
-    margin: 20px;
 }
 
 
 #dep_nome {
     font-size: 24px;
-    font-weight: bold;
+    font-weight: 800;
     color: purple;
 }
 
