@@ -8,7 +8,7 @@ body {
 .col_layout {
     height: 500px;
     background-color: white;
-    margin-top: 20px;
+    margin-top: 15px;
     padding: 15px;
 }
 
@@ -28,7 +28,7 @@ body {
 
 
 #dep_foto {
-    width: 150px;
+    width: 140px;
     border-radius: 10px;
 }
 
@@ -47,5 +47,4 @@ body {
 
 #dep_partido {
     font-size: 18px;
-    margin-left: 10px;
 }

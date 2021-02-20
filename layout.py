@@ -5,9 +5,9 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 
+import utils
 
 
-UFS = camara.referencias('ufs', index=True)
 
 column1 = dbc.Col([
     dbc.Row([
@@ -50,21 +50,25 @@ column1 = dbc.Col([
         )
     ]),
 
+    html.Hr(),
+
     # Estado
     dbc.Row([
         dbc.Col(
             html.Img(
-                id='uf_bandeira',
-                className='shadow',
-                style = {
-                    'height': 'auto',
-                    'width': '100%'
-                }
+                id = 'uf_bandeira',
+                className = 'shadow',
+                style = {'height': 50}
             ),
-            width = 3
+            width = 'auto'
         ),
         dbc.Col(
-            html.Span(id='dep_uf')
+            html.Div([
+                html.Div('Unidade Federativa', className='dep_atributo_title'),
+                html.Div(id='dep_uf'),
+            ],
+                className = 'dep_atributo'
+            )
         )
     ],
         style = {'padding': 10}
@@ -75,15 +79,17 @@ column1 = dbc.Col([
         dbc.Col(
             html.Img(
                 id = 'partido_logo',
-                style = {
-                    'height': 'auto',
-                    'width': '100%'
-                }
+                style = {'height': 50}
             ),
-            width = 3
+            width = 'auto'
         ),
         dbc.Col(
-            html.Span(id='dep_partido')
+            html.Div([
+                html.Div('Partido', className='dep_atributo_title'),
+                html.Div(id='dep_partido'),
+            ],
+                className = 'dep_atributo'
+            )
         )
     ],
         style = {'padding': 10}
@@ -105,41 +111,49 @@ column2 = dbc.Col(
 
 
 
+navbar = dbc.Navbar([
+    dbc.Input(
+        type = 'number',
+        min = 1,
+        max = 56,
+        step = 1,
+        value = 56,
+        style = {'width': 70},
+        className = 'mr-2',
+        id = 'leg_input'
+    ),
+    dcc.Dropdown(
+        id = 'uf_dropdown',
+        placeholder = 'Selecione uma UF...',
+        style = {'width': 270},
+        options = [{
+            'label': utils.UFS[uf],
+            'value': uf
+        } for uf in utils.UFS]
+    ),
+    dcc.Dropdown(
+        id = 'dep_dropdown',
+        placeholder = 'Selecione um deputado...',
+        style = {'width': 300},
+        clearable = False,
+        className = 'ml-2'
+    )
+])
+
+
+
 layout = html.Div([
-    dbc.Navbar([
-        dbc.Input(
-            type = 'number',
-            min = 1,
-            max = 56,
-            step = 1,
-            value = 56,
-            style = {'width': 70},
-            className = 'mr-2'
+    navbar,
+    dcc.Loading(
+        dbc.Container([
+            dbc.Row([
+                column1,
+                column2
+            ])
+        ],
+            className = 'dashboard',
+            fluid = True
         ),
-        dcc.Dropdown(
-            id = 'uf_dropdown',
-            placeholder = 'UF',
-            style = {'width': 270},
-            options = [{
-                'label': UFS.loc[i, 'nome'],
-                'value': i
-            } for i in UFS.index]
-        ),
-        dcc.Dropdown(
-            id = 'dep_dropdown',
-            placeholder = 'Selecione um deputado...',
-            style = {'width': 300},
-            clearable = False,
-            className = 'ml-2'
-        )
-    ]),
-    dbc.Container([
-        dbc.Row([
-            column1,
-            column2
-        ])
-    ],
-        className = 'dashboard',
-        fluid = True
+        fullscreen = True
     )
 ])

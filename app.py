@@ -32,17 +32,21 @@ def get_logo(cod:int) -> str:
 
 PARTIDOS = camara.lista_partidos(legislatura=56, itens=50)
 PARTIDOS['logo'] = PARTIDOS.id.apply(get_logo)
-DEPUTADOS = camara.lista_deputados()
 
 
 
 # Carregar opções do dropdown
 @app.callback(
     Output('dep_dropdown', 'options'),
-    [Input('dep_dropdown', 'style')])
-def update_dropdown_options(x):
+    [Input('leg_input', 'value'),
+    Input('uf_dropdown', 'value')])
+def update_dropdown_options(leg, uf):
+    DEPUTADOS = camara.lista_deputados(
+        legislatura = leg,
+        uf = uf
+    )
     return [{'label': row.nome, 'value': row.id} \
-        for i, row in DEPUTADOS.iterrows()]
+        for _, row in DEPUTADOS.iterrows()]
 
 
 
@@ -75,7 +79,7 @@ def update_deputado(cod):
         dep.gabinete['telefone'],
         nascimento,
         utils.UFS[dep.uf],
-        utils.bandeira(dep.uf),
+        utils.bandeira(dep.uf, tamanho=50),
         PARTIDOS.loc[partido, 'nome'],
         PARTIDOS.loc[partido, 'logo']
     )
