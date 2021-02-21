@@ -65,8 +65,10 @@ def update_dropdown_options(leg, uf):
     [Input('dep_dropdown', 'value')],
     prevent_initial_call = True)
 def update_deputado(cod):
+
     dep = camara.Deputado(cod)
     partido = PARTIDOS.index[PARTIDOS.sigla==dep.partido][0]
+    charts = utils.Charts(deputado=dep, ano=2020)
 
     nascimento = datetime.strftime(
         datetime.strptime(dep.nascimento, '%Y-%m-%d'),
@@ -83,7 +85,7 @@ def update_deputado(cod):
         utils.bandeira(dep.uf, tamanho=50),
         PARTIDOS.loc[partido, 'nome'],
         PARTIDOS.loc[partido, 'logo'],
-        utils.pizza(dep, ano=2021)
+        charts.donut()
     )
 
 

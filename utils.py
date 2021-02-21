@@ -97,56 +97,116 @@ UFS = {
 
 
 
-def pizza(deputado:camara.Deputado, ano:int) -> go.Figure:
+class Charts:
+    '''
+    Objeto para importação de dados com métodos para geração de gráficos.
 
-    i = 0
-    dfs = []
+    Parameters
+    ----------
+    deputado : DadosAbertosBrasil.camara.Deputado
+        Classe Deputado.
+    ano : int
+        Ano da análise.
 
-    while True:
-        i += 1
-        df = deputado.despesas(itens=100, pagina=i, ano=ano)
+    Attributes
+    ----------
+    ano : int
+        Ano da análise.
+    despesas : pandas.core.frame.DataFrame
+        Tabela de despesas do deputado.
+
+    --------------------------------------------------------------------------
+    '''
+
+    def __init__(self, deputado:camara.Deputado, ano:int):
+
+        self.ano = ano
+        i = 0
+        dfs = []
+        b = True
+
+        while b:
+            i += 1
+            df = deputado.despesas(itens=100, pagina=i, ano=ano)
+            dfs.append(df)
+            b = not df.empty
+
         try:
-            dfs.append(df[['tipoDespesa', 'valorDocumento']])
+            self.despesas = pd.concat(dfs, ignore_index=True)
         except:
-            break
+            return None
 
-    try:
-        despesas = pd.concat(dfs, ignore_index=True)
-    except:
-        return None
-        
-    categorias = despesas.groupby('tipoDespesa').sum()
 
-    total = locale.currency(
-        categorias.valorDocumento.sum(),
-        grouping = True
-    )
+    def donut(self) -> go.Figure:
+        '''
+        Gera um gráfico de donut dos tipos de despesas.
 
-    return go.Figure(
-        data = go.Pie(
-            labels = categorias.index,
-            values = categorias.valorDocumento,
-            hole = 0.7,
-            marker = {
-                'line': {
-                    'color': 'white',
-                    'width': 2
+        Returns
+        -------
+        plotly.graph_objects.Figure
+            Gráfico de donut, onde cada fatia é um tipo de despesas e o valor
+            no centro do gráfico é a soma total das despesas.
+
+        ----------------------------------------------------------------------
+        '''
+
+        categorias = self.despesas[['tipoDespesa', 'valorDocumento']] \
+            .groupby('tipoDespesa').sum()
+
+        total = locale.currency(
+            categorias.valorDocumento.sum(),
+            grouping = True
+        )
+
+        return go.Figure(
+            data = go.Pie(
+                labels = categorias.index,
+                values = categorias.valorDocumento,
+                hole = 0.7,
+                marker = {
+                    'line': {
+                        'color': 'white',
+                        'width': 2
+                    }
                 }
+            ),
+            layout = {
+                'title': f'Despesas {self.ano}',
+                'font': {'family': 'Montserrat'},
+                'showlegend': False,
+                'annotations': [{
+                    'text': f'<b>{total}</b>',
+                    'font': {
+                        'size': 18,
+                        'color': 'purple',
+                    },
+                    'x': 0.5,
+                    'y': 0.5,
+                    'showarrow': False
+                }]
             }
-        ),
-        layout = {
-            'title': f'Despesas {ano}',
-            'font': {'family': 'Montserrat'},
-            'showlegend': False,
-            'annotations': [{
-                'text': f'<b>{total}</b>',
-                'font': {
-                    'size': 18,
-                    'color': 'purple',
-                },
-                'x': 0.5,
-                'y': 0.5,
-                'showarrow': False
-            }]
-        }
-    )
+        )
+
+
+    def timeline(self) -> go.Figure:
+        '''
+        Gera uma linha do tempo de despesas.
+
+        Returns
+        -------
+        plotly.graph_objects.Figure
+            Gráfico de barras, onde cada categoria do gráfico é um mês e os
+            valores são as despesas dos meses respectivos.
+
+        ----------------------------------------------------------------------
+        '''
+
+        meses = self.despesas[['dataDocumento', 'valorDocumento']] \
+            .groupby(self.despesas.dataDocumento.str[:-3]).sum()
+
+        return go.Figure(
+            data = go.Bar(
+                x = meses.index,
+                y = meses.valorDocumento
+            )
+        )
