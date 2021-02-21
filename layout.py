@@ -104,7 +104,7 @@ column1 = dbc.Col([
 
 column2 = dbc.Col(
     html.Div(
-        'Coluna 2',
+        dcc.Graph(id='pizza'),
         className = 'col_layout shadow'
     )
 )

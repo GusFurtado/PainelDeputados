@@ -1,3 +1,14 @@
+from DadosAbertosBrasil import camara
+
+import locale
+
+import plotly.graph_objects as go
+import pandas as pd
+
+locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+
+
+
 def bandeira(uf:str, tamanho:int=100) -> str:
     '''
     Gera a URL da WikiMedia para a bandeira de um estado de um tamanho
@@ -53,6 +64,7 @@ def bandeira(uf:str, tamanho:int=100) -> str:
     return URL + bandeira[uf]
 
 
+
 UFS = {
     'AC': 'Acre',
     'AM': 'Amazonas',
@@ -82,3 +94,59 @@ UFS = {
     'SP': 'São Paulo',
     'TO': 'Tocantins'
 }
+
+
+
+def pizza(deputado:camara.Deputado, ano:int) -> go.Figure:
+
+    i = 0
+    dfs = []
+
+    while True:
+        i += 1
+        df = deputado.despesas(itens=100, pagina=i, ano=ano)
+        try:
+            dfs.append(df[['tipoDespesa', 'valorDocumento']])
+        except:
+            break
+
+    try:
+        despesas = pd.concat(dfs, ignore_index=True)
+    except:
+        return None
+        
+    categorias = despesas.groupby('tipoDespesa').sum()
+
+    total = locale.currency(
+        categorias.valorDocumento.sum(),
+        grouping = True
+    )
+
+    return go.Figure(
+        data = go.Pie(
+            labels = categorias.index,
+            values = categorias.valorDocumento,
+            hole = 0.7,
+            marker = {
+                'line': {
+                    'color': 'white',
+                    'width': 2
+                }
+            }
+        ),
+        layout = {
+            'title': f'Despesas {ano}',
+            'font': {'family': 'Montserrat'},
+            'showlegend': False,
+            'annotations': [{
+                'text': f'<b>{total}</b>',
+                'font': {
+                    'size': 18,
+                    'color': 'purple',
+                },
+                'x': 0.5,
+                'y': 0.5,
+                'showarrow': False
+            }]
+        }
+    )

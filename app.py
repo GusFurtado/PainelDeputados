@@ -60,7 +60,8 @@ def update_dropdown_options(leg, uf):
     Output('dep_uf', 'children'),
     Output('uf_bandeira', 'src'),
     Output('dep_partido', 'children'),
-    Output('partido_logo', 'src')],
+    Output('partido_logo', 'src'),
+    Output('pizza', 'figure')],
     [Input('dep_dropdown', 'value')],
     prevent_initial_call = True)
 def update_deputado(cod):
@@ -81,7 +82,8 @@ def update_deputado(cod):
         utils.UFS[dep.uf],
         utils.bandeira(dep.uf, tamanho=50),
         PARTIDOS.loc[partido, 'nome'],
-        PARTIDOS.loc[partido, 'logo']
+        PARTIDOS.loc[partido, 'logo'],
+        utils.pizza(dep, ano=2021)
     )
 
 
