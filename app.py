@@ -38,11 +38,10 @@ PARTIDOS['logo'] = PARTIDOS.id.apply(get_logo)
 # Carregar opções do dropdown
 @app.callback(
     Output('dep_dropdown', 'options'),
-    [Input('leg_input', 'value'),
-    Input('uf_dropdown', 'value')])
-def update_dropdown_options(leg, uf):
+    [Input('uf_dropdown', 'value')])
+def update_dropdown_options(uf):
     DEPUTADOS = camara.lista_deputados(
-        legislatura = leg,
+        legislatura = 56,
         uf = uf
     )
     return [{'label': row.nome, 'value': row.id} \

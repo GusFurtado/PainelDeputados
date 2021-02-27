@@ -288,8 +288,8 @@ class Charts:
                 },
                 'xref': 'paper',
                 'yref': 'paper',
-                'x': 0.07,
-                'y': 0.76,
+                'x': 0.04,
+                'y': 0.75,
                 'showarrow': False
             }]
         })

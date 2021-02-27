@@ -100,7 +100,8 @@ column1 = dbc.Col([
 ],
     className = 'col_layout shadow',
     style = {'margin-left': 10},
-    width = 5
+    width = 12,
+    lg = 5
 )
 
 
@@ -123,16 +124,6 @@ column2 = dbc.Col(
 
 
 navbar = dbc.Navbar([
-    dbc.Input(
-        type = 'number',
-        min = 1,
-        max = 56,
-        step = 1,
-        value = 56,
-        style = {'width': 70},
-        className = 'mr-2',
-        id = 'leg_input'
-    ),
     dcc.Dropdown(
         id = 'uf_dropdown',
         placeholder = 'Selecione uma UF...',
