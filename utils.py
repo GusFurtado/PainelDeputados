@@ -1,13 +1,10 @@
 from DadosAbertosBrasil import camara
 
-import locale
-
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import plotly.io as pio
 import pandas as pd
 
-locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 pio.templates.default = "plotly_white"
 
 
@@ -155,10 +152,7 @@ class Charts:
 
         try:
             self.despesas = pd.concat(dfs, ignore_index=True)
-            self.total = locale.currency(
-                self.despesas.valorDocumento.sum(),
-                grouping = True
-            )
+            self.total = f'{self.despesas.valorDocumento.sum():,.2f}'
 
         except:
             raise Exception('NoData')
@@ -288,7 +282,7 @@ class Charts:
                 },
                 'xref': 'paper',
                 'yref': 'paper',
-                'x': 0.04,
+                'x': 0.06,
                 'y': 0.75,
                 'showarrow': False
             }]
