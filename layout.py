@@ -19,7 +19,10 @@ column1 = dbc.Col([
             width = 'auto'
         ),
         dbc.Col([
-            html.Div(id='dep_nome'),
+            html.Div(
+                id = 'dep_nome',
+                className = 'title'
+            ),
 
             # Email
             html.Div([
@@ -103,8 +106,16 @@ column1 = dbc.Col([
 
 
 column2 = dbc.Col(
-    html.Div(
-        dcc.Graph(id='pizza'),
+    html.Div([
+        html.Div(
+            'Despesas',
+            className = 'title',
+            style = {'text-align': 'center'}
+        ),
+        html.Div(
+            dcc.Graph(id='plots')
+        )
+    ],
         className = 'col_layout shadow'
     )
 )

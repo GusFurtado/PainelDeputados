@@ -3,9 +3,12 @@ from DadosAbertosBrasil import camara
 import locale
 
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import plotly.io as pio
 import pandas as pd
 
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+pio.templates.default = "plotly_white"
 
 
 
@@ -97,6 +100,23 @@ UFS = {
 
 
 
+MESES = {
+    1: 'Janeiro',
+    2: 'Fevereiro',
+    3: 'Março',
+    4: 'Abril',
+    5: 'Maio',
+    6: 'Junho',
+    7: 'Julho',
+    8: 'Agosto',
+    9: 'Setembro',
+    10: 'Outubro',
+    11: 'Novembro',
+    12: 'Dezembro'
+}
+
+
+
 class Charts:
     '''
     Objeto para importação de dados com métodos para geração de gráficos.
@@ -114,6 +134,8 @@ class Charts:
         Ano da análise.
     despesas : pandas.core.frame.DataFrame
         Tabela de despesas do deputado.
+    total : str
+        Valor total das despesas no formato 'R$ #.##0,00'.
 
     --------------------------------------------------------------------------
     '''
@@ -133,17 +155,22 @@ class Charts:
 
         try:
             self.despesas = pd.concat(dfs, ignore_index=True)
+            self.total = locale.currency(
+                self.despesas.valorDocumento.sum(),
+                grouping = True
+            )
+
         except:
-            return None
+            raise Exception('NoData')
 
 
-    def donut(self) -> go.Figure:
+    def donut(self) -> go.Pie:
         '''
         Gera um gráfico de donut dos tipos de despesas.
 
         Returns
         -------
-        plotly.graph_objects.Figure
+        plotly.graph_objects.Pie
             Gráfico de donut, onde cada fatia é um tipo de despesas e o valor
             no centro do gráfico é a soma total das despesas.
 
@@ -153,60 +180,124 @@ class Charts:
         categorias = self.despesas[['tipoDespesa', 'valorDocumento']] \
             .groupby('tipoDespesa').sum()
 
-        total = locale.currency(
-            categorias.valorDocumento.sum(),
-            grouping = True
-        )
-
-        return go.Figure(
-            data = go.Pie(
-                labels = categorias.index,
-                values = categorias.valorDocumento,
-                hole = 0.7,
-                marker = {
-                    'line': {
-                        'color': 'white',
-                        'width': 2
-                    }
+        return go.Pie(
+            labels = categorias.index,
+            values = categorias.valorDocumento,
+            hole = 0.7,
+            marker = {
+                'line': {
+                    'color': 'white',
+                    'width': 2
                 }
-            ),
-            layout = {
-                'title': f'Despesas {self.ano}',
-                'font': {'family': 'Montserrat'},
-                'showlegend': False,
-                'annotations': [{
-                    'text': f'<b>{total}</b>',
-                    'font': {
-                        'size': 18,
-                        'color': 'purple',
-                    },
-                    'x': 0.5,
-                    'y': 0.5,
-                    'showarrow': False
-                }]
             }
         )
 
 
-    def timeline(self) -> go.Figure:
+    def timeline(self) -> go.Bar:
         '''
         Gera uma linha do tempo de despesas.
 
         Returns
         -------
-        plotly.graph_objects.Figure
+        plotly.graph_objects.Bar
             Gráfico de barras, onde cada categoria do gráfico é um mês e os
             valores são as despesas dos meses respectivos.
 
         ----------------------------------------------------------------------
         '''
 
-        meses = self.despesas[['dataDocumento', 'valorDocumento']] \
-            .groupby(self.despesas.dataDocumento.str[:-3]).sum()
+        meses = self.despesas[['mes', 'valorDocumento']] \
+            .groupby('mes').sum()
 
-        return go.Figure(
-            data = go.Bar(
-                x = meses.index,
-                y = meses.valorDocumento
-            )
+        return go.Bar(
+            x = meses.index.map(MESES),
+            y = meses.valorDocumento,
+            cliponaxis = False
         )
+
+
+    def fornecedores(self):
+        forn = self.despesas[['nomeFornecedor', 'valorDocumento']] \
+            .groupby('nomeFornecedor').sum() \
+            .sort_values(by='valorDocumento', ascending=False)[:5]
+
+        return go.Bar(
+            x = forn.valorDocumento[::-1],
+            y = forn.index[::-1].str[:20],
+            orientation = 'h'
+        )
+
+
+    def plots(self) -> go.Figure:
+        '''
+        Figure contendo os gráficos de despesas.
+
+        Returns
+        -------
+        plotly.graph_objs._figure.Figure
+            Subplots com gráficos de despesas.
+
+        ----------------------------------------------------------------------
+        '''
+
+        fig = make_subplots(
+            rows = 2,
+            cols = 2,
+            horizontal_spacing = 0.3,
+            vertical_spacing = 0.05,
+            column_widths = [0.4, 0.6],
+            row_heights = [0.6, 0.4],
+            specs = [
+                [{'type': 'domain'}, {}],
+                [{'colspan': 2}, None]
+            ]
+        )
+
+        fig.add_trace(
+            self.donut(),
+            row = 1,
+            col = 1
+        )
+
+        fig.add_trace(
+            self.timeline(),
+            row = 2,
+            col = 1
+        )
+
+        fig.add_trace(
+            self.fornecedores(),
+            row = 1,
+            col = 2
+        )
+
+        fig.update_layout({
+            'showlegend': False,
+            'font': {'family': 'Montserrat'},
+            'margin': {
+                't': 10,
+                'b': 0,
+                'l': 10,
+                'r': 10
+            },
+            'annotations': [{
+                'text': f'<b>{self.total}</b>',
+                'font': {
+                    'size': 18,
+                    'color': 'purple',
+                },
+                'xref': 'paper',
+                'yref': 'paper',
+                'x': 0.07,
+                'y': 0.76,
+                'showarrow': False
+            }]
+        })
+
+        fig.update_yaxes(
+            ticksuffix = '   ',
+            row = 1,
+            col = 2
+        )
+
+        return fig
