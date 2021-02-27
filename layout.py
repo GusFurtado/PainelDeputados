@@ -138,6 +138,16 @@ navbar = dbc.Navbar([
         style = {'width': 300},
         clearable = False,
         className = 'ml-2'
+    ),
+    dbc.Input(
+        id = 'ano_input',
+        type = 'number',
+        value = 2021,
+        max = 2022,
+        min = 2019,
+        style = {'width': 120},
+        size = 'sm',
+        className = 'ml-3'
     )
 ])
 

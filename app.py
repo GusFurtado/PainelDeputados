@@ -23,6 +23,7 @@ app = dash.Dash(
 
 app.layout = layout.layout
 app.title = 'Painel de Deputados'
+server = app.server
 
 
 
@@ -63,13 +64,14 @@ def update_dropdown_options(uf):
     Output('plots', 'figure'),
     Output('dashboard', 'style'),
     Output('none_selected', 'style')],
-    [Input('dep_dropdown', 'value')],
+    [Input('dep_dropdown', 'value'),
+    Input('ano_input', 'value')],
     prevent_initial_call = True)
-def update_deputado(cod):
+def update_deputado(cod, ano):
 
     dep = camara.Deputado(cod)
     partido = PARTIDOS.index[PARTIDOS.sigla==dep.partido][0]
-    charts = utils.Charts(deputado=dep, ano=2020)
+    charts = utils.Charts(deputado=dep, ano=ano)
 
     nascimento = datetime.strftime(
         datetime.strptime(dep.nascimento, '%Y-%m-%d'),
