@@ -10,9 +10,9 @@ Este é o repositório para os arquivos do projeto **Painel de Deputados**, que 
 
 <div align="center">
 	<p style="margin-bottom: 20px">
-		<img src="https://raw.githubusercontent.com/GusFurtado/PainelDeputados/master/assets/exemplo_aecio.png">
+		<img src="https://raw.githubusercontent.com/GusFurtado/PainelDeputados/main/assets/exemplo_aecio.png">
 	</p>
     <p style="margin-bottom: 20px">
-		<img src="https://raw.githubusercontent.com/GusFurtado/PainelDeputados/master/assets/exemplo_tiririca.png">
+		<img src="https://raw.githubusercontent.com/GusFurtado/PainelDeputados/main/assets/exemplo_tiririca.png">
 	</p>
 </div>
