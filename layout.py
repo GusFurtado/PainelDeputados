@@ -146,16 +146,22 @@ navbar = dbc.Navbar([
 
 layout = html.Div([
     navbar,
-    dcc.Loading(
+    dcc.Loading([
         dbc.Container([
             dbc.Row([
                 column1,
                 column2
             ])
         ],
-            className = 'dashboard',
-            fluid = True
+            fluid = True,
+            id = 'dashboard',
+            style = {'display': 'none'}
         ),
+        html.Div(
+            'Selecione um deputado',
+            id = 'none_selected'
+        )
+    ],
         fullscreen = True
     )
 ])

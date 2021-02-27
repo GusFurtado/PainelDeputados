@@ -60,7 +60,9 @@ def update_dropdown_options(uf):
     Output('uf_bandeira', 'src'),
     Output('dep_partido', 'children'),
     Output('partido_logo', 'src'),
-    Output('plots', 'figure')],
+    Output('plots', 'figure'),
+    Output('dashboard', 'style'),
+    Output('none_selected', 'style')],
     [Input('dep_dropdown', 'value')],
     prevent_initial_call = True)
 def update_deputado(cod):
@@ -84,7 +86,9 @@ def update_deputado(cod):
         utils.bandeira(dep.uf, tamanho=50),
         PARTIDOS.loc[partido, 'nome'],
         PARTIDOS.loc[partido, 'logo'],
-        charts.plots()
+        charts.plots(),
+        None,
+        {'display': 'none'}
     )
 
 
