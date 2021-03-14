@@ -315,3 +315,24 @@ class Charts:
         )
 
         return fig
+
+
+
+def get_partidos_json():
+    '''
+    Captura partidos e a URL para as logos e exporta em um arquivo JSON que
+    será consumido pela aplicação.
+
+    --------------------------------------------------------------------------
+    '''
+
+    def get_logo(cod:int) -> str:
+        p = camara.Partido(cod)
+        return p.logo
+
+    partidos = camara.lista_partidos(legislatura=56, itens=50)
+    partidos['logo'] = partidos.id.apply(get_logo)
+    partidos.drop(columns='uri', inplace=True)
+    partidos.to_json('data.json')
+
+    return

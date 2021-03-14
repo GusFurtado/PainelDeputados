@@ -6,6 +6,8 @@ import dash
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 
+from pandas import read_json
+
 import layout, utils
 
 
@@ -14,6 +16,7 @@ MONTSERRAT = {
     'href': 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
     'rel': 'stylesheet'
 }
+
 
 
 app = dash.Dash(
@@ -27,12 +30,7 @@ server = app.server
 
 
 
-def get_logo(cod:int) -> str:
-    p = camara.Partido(cod)
-    return p.logo
-
-PARTIDOS = camara.lista_partidos(legislatura=56, itens=50)
-PARTIDOS['logo'] = PARTIDOS.id.apply(get_logo)
+PARTIDOS = read_json('data.json')
 
 
 
