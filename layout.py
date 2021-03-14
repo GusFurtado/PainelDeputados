@@ -8,97 +8,98 @@ import utils
 
 
 
-column1 = dbc.Col([
-    dbc.Row([
-        dbc.Col(
-            html.Img(
-                id = 'dep_foto',
-                className = 'shadow'
+column1 = dbc.Col(
+    html.Div([
+        dbc.Row([
+            dbc.Col(
+                html.Img(
+                    id = 'dep_foto',
+                    className = 'shadow'
+                ),
+                width = 'auto'
             ),
-            width = 'auto'
-        ),
-        dbc.Col([
-            html.Div(
-                id = 'dep_nome',
-                className = 'title'
-            ),
+            dbc.Col([
+                html.Div(
+                    id = 'dep_nome',
+                    className = 'title'
+                ),
 
-            # Email
-            html.Div([
-                html.Div('Email', className='dep_atributo_title'),
-                html.Div(id='dep_email')
-            ],
-                className = 'dep_atributo'
-            ),
+                # Email
+                html.Div([
+                    html.Div('Email', className='dep_atributo_title'),
+                    html.Div(id='dep_email')
+                ],
+                    className = 'dep_atributo'
+                ),
 
-            # Telefone
-            html.Div([
-                html.Div('Telefone', className='dep_atributo_title'),
-                html.Div(id='dep_telefone'),
-            ],
-                className = 'dep_atributo'
-            ),
+                # Telefone
+                html.Div([
+                    html.Div('Telefone', className='dep_atributo_title'),
+                    html.Div(id='dep_telefone'),
+                ],
+                    className = 'dep_atributo'
+                ),
 
-            # Nascimento
-            html.Div([
-                html.Div('Nascimento', className='dep_atributo_title'),
-                html.Div(id='dep_nascimento')
+                # Nascimento
+                html.Div([
+                    html.Div('Nascimento', className='dep_atributo_title'),
+                    html.Div(id='dep_nascimento')
+                ],
+                    className = 'dep_atributo'
+                )
+
             ],
-                className = 'dep_atributo'
+                width = 'auto'
             )
+        ]),
 
+        html.Hr(),
+
+        # Estado
+        dbc.Row([
+            dbc.Col(
+                html.Img(
+                    id = 'uf_bandeira',
+                    className = 'shadow',
+                    style = {'height': 50}
+                ),
+                width = 'auto'
+            ),
+            dbc.Col(
+                html.Div([
+                    html.Div('Unidade Federativa', className='dep_atributo_title'),
+                    html.Div(id='dep_uf'),
+                ],
+                    className = 'dep_atributo'
+                )
+            )
         ],
-            width = 'auto'
-        )
-    ]),
-
-    html.Hr(),
-
-    # Estado
-    dbc.Row([
-        dbc.Col(
-            html.Img(
-                id = 'uf_bandeira',
-                className = 'shadow',
-                style = {'height': 50}
-            ),
-            width = 'auto'
+            style = {'padding': 10}
         ),
-        dbc.Col(
-            html.Div([
-                html.Div('Unidade Federativa', className='dep_atributo_title'),
-                html.Div(id='dep_uf'),
-            ],
-                className = 'dep_atributo'
+
+        # Partido
+        dbc.Row([
+            dbc.Col(
+                html.Img(
+                    id = 'partido_logo',
+                    style = {'height': 50}
+                ),
+                width = 'auto'
+            ),
+            dbc.Col(
+                html.Div([
+                    html.Div('Partido', className='dep_atributo_title'),
+                    html.Div(id='dep_partido'),
+                ],
+                    className = 'dep_atributo'
+                )
             )
+        ],
+            style = {'padding': 10}
         )
     ],
-        style = {'padding': 10}
+        className = 'col_layout shadow'
     ),
-
-    # Partido
-    dbc.Row([
-        dbc.Col(
-            html.Img(
-                id = 'partido_logo',
-                style = {'height': 50}
-            ),
-            width = 'auto'
-        ),
-        dbc.Col(
-            html.Div([
-                html.Div('Partido', className='dep_atributo_title'),
-                html.Div(id='dep_partido'),
-            ],
-                className = 'dep_atributo'
-            )
-        )
-    ],
-        style = {'padding': 10}
-    )
-],
-    className = 'col_layout shadow',
-    style = {'margin-left': 10},
     width = 12,
     lg = 5
 )
@@ -113,11 +114,16 @@ column2 = dbc.Col(
             style = {'text-align': 'center'}
         ),
         html.Div(
-            dcc.Graph(id='plots')
+            dcc.Graph(
+                id = 'plots',
+                config = {'displayModeBar': False}
+            )
         )
     ],
         className = 'col_layout shadow'
-    )
+    ),
+    width = 12,
+    lg = 7
 )
 
 

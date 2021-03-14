@@ -203,10 +203,20 @@ class Charts:
         meses = self.despesas[['mes', 'valorDocumento']] \
             .groupby('mes').sum()
 
+        mes = meses.index.map(MESES)
+        value_num = meses.valorDocumento
+        value_text = value_num.apply(lambda x: f'{x:,.2f}')
+        hover = [f'<b>Mês:</b> {i}<br><b>Valor:</b> {v}<extra></extra>' \
+            for i, v in zip(mes, value_text)]
+
         return go.Bar(
-            x = meses.index.map(MESES),
-            y = meses.valorDocumento,
-            cliponaxis = False
+            x = mes,
+            y = value_num,
+            cliponaxis = False,
+            hovertemplate = hover,
+            text = value_text,
+            textposition = 'inside',
+            marker_color = 'purple'
         )
 
 
@@ -215,10 +225,20 @@ class Charts:
             .groupby('nomeFornecedor').sum() \
             .sort_values(by='valorDocumento', ascending=False)[:5]
 
+        forns = forn.index[::-1]
+        value_num = forn.valorDocumento[::-1]
+        value_text = value_num.apply(lambda x: f'{x:,.2f}')
+        hover = [f'<b>Fornecedor:</b> {i}<br><b>Valor:</b> {v}<extra></extra>' \
+            for i, v in zip(forns, value_text)]
+
         return go.Bar(
-            x = forn.valorDocumento[::-1],
-            y = forn.index[::-1].str[:20],
-            orientation = 'h'
+            x = value_num,
+            y = forns.str[:25],
+            orientation = 'h',
+            hovertemplate = hover,
+            text = value_text,
+            textposition = 'inside',
+            marker_color = 'purple'
         )
 
 
